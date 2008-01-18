@@ -1,4 +1,4 @@
-# $Id: Server.pm 1586 2007-12-31 21:29:25Z augie $
+# $Id: Server.pm 1630 2008-01-18 19:37:24Z augie $
 # Provides an interface to create a server to control both the
 # PowerDNS Authoritative and Recursive servers.
 
@@ -22,11 +22,11 @@ PowerDNS::Control::Server - Provides an interface to control the PowerDNS daemon
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -689,6 +689,8 @@ L<http://search.cpan.org/dist/PowerDNS-Control-Server>
 
 =head1 ACKNOWLEDGEMENTS
 
+I would like to thank Sonic.net for allowing me to release this to the public.
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2007 Augie Schwer, all rights reserved.
@@ -698,8 +700,8 @@ under the same terms as Perl itself.
 
 =head1 VERSION
 
-	0.01
-	$Id: Server.pm 1586 2007-12-31 21:29:25Z augie $
+	0.02
+	$Id: Server.pm 1630 2008-01-18 19:37:24Z augie $
 
 =cut
 

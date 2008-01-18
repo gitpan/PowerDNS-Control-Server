@@ -1,11 +1,19 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         PowerDNS-Control-Server
-version:      0.01
+version:      0.02
 version_from: lib/PowerDNS/Control/Server.pm
 installdirs:  site
 requires:
+    Carp:                          0
+    English:                       0
+    File::Temp:                    0
+    IO::Socket:                    0
+    Net::CIDR:                     0
+    POSIX:                         0
     Test::More:                    0
+    Unix::PID:                     0
+    Unix::Syslog:                  0
 
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.30_01
