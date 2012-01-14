@@ -1,4 +1,4 @@
-# $Id: Server.pm 1630 2008-01-18 19:37:24Z augie $
+# $Id: Server.pm 4430 2012-01-14 00:27:53Z augie $
 # Provides an interface to create a server to control both the
 # PowerDNS Authoritative and Recursive servers.
 
@@ -22,11 +22,11 @@ PowerDNS::Control::Server - Provides an interface to control the PowerDNS daemon
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
@@ -291,7 +291,7 @@ sub control_socket_comm
 		return "Cannot connect to control socket $c_socket : $!";
 	}
 
-	send($sock_fh , $msg , 0);
+	send($sock_fh , "$msg\n" , 0);
 
 	$msg = '';
 
@@ -345,6 +345,33 @@ sub auth_retrieve($)
 	}
 }
 
+=head2 auth_wipe_cache($domain)
+
+Expects a scalar domain name to be wiped out of cache.
+Calls pdns_control purge domain$ .
+Returns "+OK" if successful or "-ERR error message" otherwise.
+
+=cut
+
+sub auth_wipe_cache($)
+{
+	my $self   = shift;
+        my $domain = shift;
+
+	my $msg	= $self->control_socket_comm("purge $domain\$" , $self->{'pdns_control_socket'});
+
+	if ( $msg =~ /^\d+/ )
+	{
+		$self->logmsg('+OK');
+		return "+OK\n";
+	}
+	else
+	{
+		$self->logmsg("Error: $msg");
+		return "-ERR $msg\n";
+	}
+}
+
 =head2 rec_wipe_cache($domain)
 
 Expects a scalar domain name to be wiped out of cache.
@@ -385,7 +412,7 @@ sub rec_ping
 	my $self = shift;
 	my $msg  = $self->control_socket_comm('ping' , $self->{'rec_control_socket'});
 	
-	if ( $msg eq 'pong' )
+	if ( $msg =~ /^pong/ )
 	{ 
 		$self->logmsg("+OK");
 		return "+OK\n";
@@ -514,6 +541,17 @@ sub start
 				my $result = $self->auth_retrieve($arg1);
 				print $conn $result;
 
+			}
+			elsif ($action eq 'auth_wipe_cache')
+			{
+				unless ($arg1)
+				{
+					$self->logmsg("Recieved improper command syntax :: '$command'\n");
+					print $conn "-ERR invalid command syntax\n";
+					next;
+				}
+				my $result = $self->auth_wipe_cache($arg1);
+				print $conn $result;
 			}
 			elsif ($action eq 'rec_wipe_cache')
 			{
@@ -700,8 +738,8 @@ under the same terms as Perl itself.
 
 =head1 VERSION
 
-	0.02
-	$Id: Server.pm 1630 2008-01-18 19:37:24Z augie $
+	0.03
+	$Id: Server.pm 4430 2012-01-14 00:27:53Z augie $
 
 =cut
 
